@@ -1,0 +1,45 @@
+Create a Streamlit web application designed as an educational analytics dashboard called "AI Student Performance Assistant". The app should simulate a logged-in experience for a "Teacher & School Admin" using a high-quality, modern UI with a clean white/light-gray background and professional blue/purple accents.
+
+1. Sidebar Component (Left Panel):
+- Role Indicator: "🏫 Teacher & School Admin" (Sub-text: "Signed in as teacher").
+- Section 1: "MODEL PERFORMANCE" 
+  * Metrics displayed clearly: Regressor RMSE = 2.53 pts, Classifier Acc = 97.5%.
+- Section 2: "DATASET"
+  * Text details: Source: Kaggle StudentPerformanceFactors.csv | Records: 6,607 students | Features: 20 columns | Model: Random Forest.
+- Bottom of Sidebar: Include a "Sign Out" button.
+
+2. Top Header Metrics Row (Main Panel):
+Create a 4-column horizontal grid layout at the top of the main page displaying key status cards:
+- Card 1: "Average Score" -> Bold value "67.2" (Subtext: "↑ ±3.9 std").
+- Card 2: "At-Risk Students" -> Bold value "68" (Subtext in a light red badge/text: "↑ 1.0% of total").
+- Card 3: "High Performers" -> Bold value "124" (Subtext: "↑ 1.9% scored 75+").
+- Card 4: "Avg Attendance" -> Bold value "80.0%" (Subtext: "↑ target: ≥90%").
+
+3. Interactive Navigation Controls:
+Use a horizontal radio group or stylized pill buttons acting as tabs for navigating between three views:
+- View 1: "📊 Charts & Distributions" (Default selected)
+- View 2: "⚠️ At-Risk Tracker"
+- View 3: "🔬 Factor Comparisons"
+
+4. Tab Content Implementations:
+
+--- Tab 1: Charts & Distributions ---
+When this tab is active, show the section title "📈 Charts & Distributions" with the subtitle "Score distributions, study hours correlation, and performance categories."
+Generate a 2x2 grid using Plotly for the following mock visualizations:
+- Chart A (Top Left): "Exam Score Distribution" -> A blue histogram peaking around a mean of 67.2.
+- Chart B (Top Right): "Study Hours vs Exam Score" -> A scatter plot showing a positive correlation between Weekly Study Hours (X-axis) and Exam Score (Y-axis).
+- Chart C (Bottom Left): "Performance Category Breakdown" -> A pie chart displaying: Medium (60–74): 97.1%, High (75+): 1.88%, Low (<60): 1.03%.
+- Chart D (Bottom Right): "Average Score by Parental Involvement" -> A horizontal or vertical bar chart displaying Low (66.4), Medium (67.1), and High (68.1) scores based on parental involvement.
+
+--- Tab 2: At-Risk Tracker ---
+When this tab is active, show a detailed data table tracking the 68 at-risk students (scores < 60 or attendance < 70%).
+- Include columns for Student ID, Attendance %, Current Exam Score, Risk Level (High/Medium), and Primary Risk Factor (e.g., "Low Attendance", "Low Study Hours").
+- Add an interactive feature where a teacher can filter students by specific risk factors or search for a specific student ID.
+
+--- Tab 3: Factor Comparisons ---
+When this tab is active, display a dynamic analytics playground with interactive filters.
+- Provide a Dropdown menu (st.selectbox) labeled "Select Factor for Performance Comparison".
+- The dropdown must include options like: "Parental Involvement", "School Type", "Access to Resources", "Peer Influence", and "Motivation Level".
+- Below the dropdown, render a dynamic Plotly bar chart or box plot that automatically changes its X-axis and data grouping based on whichever factor the user chooses from the dropdown list.
+
+Ensure the styling features sharp card borders, clean spacing, clear text hierarchies, and matches a high-end educational SaaS product interface. Use Plotly charts styled to match the color theme of the dashboard.
