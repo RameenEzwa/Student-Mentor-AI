@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Student Mentor AI"
+version = "1.0.0"
+id = "artifacts/student-mentor-ai"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24000
+
+[services.development]
+run = "pnpm --filter @workspace/student-mentor-ai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/student-mentor-ai", "run", "build" ]
+publicDir = "artifacts/student-mentor-ai/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24000"
+BASE_PATH = "/"

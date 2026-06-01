@@ -1,0 +1,1 @@
+- [Wouter hook context rule](wouter-hook-context.md) — useLocation (wouter) must be called only in components, never inside custom hooks — causes "Invalid hook call" errors.

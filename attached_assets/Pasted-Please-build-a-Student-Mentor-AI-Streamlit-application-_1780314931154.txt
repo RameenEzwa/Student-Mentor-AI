@@ -1,0 +1,56 @@
+Please build a "Student Mentor AI" Streamlit application optimized for data analytics and predictive modeling. The application must use a clean, modern aesthetic (white background, high-contrast dark indigo text) and process our Kaggle student dataset seamlessly.
+
+CRITICAL ARCHITECTURE REQUIREMENT:
+Do not generate or run a separate backend server file (such as main.py running a Uvicorn server). This is causing port conflict crashes on deployment. The entire application must be driven strictly through Streamlit on its native port channels.
+
+---
+
+### 1. DATASET INTEGRATION
+- Load the Kaggle dataset from the root or assigned folder dynamically using Pandas. 
+- Ensure that if any file path variations occur during local run vs deployment, the app handles them gracefully using a standard try/except fallback block so the app never crashes with a FileNotFoundError.
+- Treat the data matrix as a global structural pool of 6,607 student records.
+
+---
+
+### 2. LANDING PAGE & HIDDEN ACCORDION LAYOUT
+- **Header:** Title the app "Student Mentor AI" with a clear subtitle: "AI-Driven Predictive Analytics for Educational Quality Assurance".
+- **Clean Alignment Toggles:** To keep the page uncluttered, bury all long descriptions inside native Streamlit expanders (`st.expander`). They must remain closed by default and show details ONLY on click:
+  1. Expander: "UN SDG 4 Alignment" -> (Hidden detail explaining quality education analytics)
+  2. Expander: "Vision 2030 Goals" -> (Hidden detail outlining the digital, knowledge-based economy catalyst)
+  3. Expander: "Vision 2035 Matrix" -> (Hidden detail detailing AI-driven early-intervention metrics)
+- **Credentials Vault Expander:** A clean, collapsible box containing a key-value matrix showing user access tokens:
+  - Student Portal: username 'student' / password 'learn2030'
+  - Teacher/Admin Portal: username 'teacher' / password 'edu4all'
+  - IT Specialist Portal: username 'admin' / password 'sys2035'
+- **Secure Form:** Provide clear, high-contrast role-based text inputs that dynamically unlock the respective dashboard views below upon authentication.
+
+---
+
+### 3. DASHBOARD VIEW 1: STUDENT WORKSPACE
+Accessed via 'student' credentials. Segment features cleanly into 3 distinct option tabs or radio options:
+- **Option 1: AI Score Prediction:** Contains interactive input sliders for student factors (e.g., Study Time, Attendance). Connect these inputs to a Random Forest Regressor machine learning pipeline. Output the predicted final grade immediately using an interactive Plotly gauge chart.
+- **Option 2: Personalised Recommendations:** Hides all input controls and renders clean, color-coded actionable study directives. Document this layout style to align with standard LMSYS API text-generation formats.
+- **Option 3: AI Chatbot Workspace:** A dedicated text conversation area allowing students to interactively submit questions and study blockers.
+
+---
+
+### 4. DASHBOARD VIEW 2: TEACHER & SCHOOL ADMIN COMMAND CENTER
+Accessed via 'teacher' credentials. Displays high-level analytics counters at the top (Cohort Mean, High Achievers Count) and organizes tools into 3 distinct views:
+- **Option 1: Charts & Distributions:** Embed an interactive Plotly Express histogram mapping cohort score spreads with interactive hover labels, replacing any unoptimized static plots.
+- **Option 2: At-Risk Tracker:** Instantly filters the 6,607-row Kaggle data matrix to isolate and display a clean interactive table of any student scoring under a critical threshold of 60.
+- **Option 3: Factor Comparisons:** A clear data breakdown view allowing users to contrast lifestyle metrics side-by-side against final student performance grades.
+
+---
+
+### 5. DASHBOARD VIEW 3: SYSTEM IT SPECIALIST & DIAGNOSTICS
+Accessed via 'admin' credentials. Serves as the data infrastructure monitoring cockpit divided into 3 options:
+- **Option 1: Dataset Summary:** Displays pipeline logs verifying row counts (6,607), feature columns, and null matrices. Include a clickable button labeled "Execute Mock Resource Ingestion Pipeline" that simulates data parsing live.
+- **Option 2: Raw Data Viewer:** Renders the underlying Kaggle database features cleanly in a filterable table component, backed by a premium monochrome pie chart mapping data volume distributions.
+- **Option 3: Data Integrity:** Displays system operational logs confirming database schema consistency and module verification codes.
+
+---
+
+### 6. PROJECT ENVIRONMENT & DEPENDENCIES
+- Automatically populate 'requirements.txt' with: `streamlit`, `pandas`, `numpy`, `plotly`, and `scikit-learn`.
+- Configure the `.replit` file with the direct run command: `run = "streamlit run app.py --server.port 5000 --server.address 0.0.0.0"`
+- Route the workspace proxy directly to port 5000 to complete the setup.

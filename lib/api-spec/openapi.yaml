@@ -3,13 +3,21 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Student Mentor AI API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: analytics
+    description: Data analytics operations
+  - name: predict
+    description: ML prediction operations
+  - name: chat
+    description: AI chatbot operations
 paths:
   /healthz:
     get:
@@ -24,6 +32,199 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Role-based login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResult"
+        "401":
+          description: Invalid credentials
+
+  /analytics/summary:
+    get:
+      operationId: getDatasetSummary
+      tags: [analytics]
+      summary: Get dataset statistics summary
+      responses:
+        "200":
+          description: Dataset summary statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DatasetSummary"
+
+  /analytics/distribution:
+    get:
+      operationId: getScoreDistribution
+      tags: [analytics]
+      summary: Get score distribution histogram data
+      responses:
+        "200":
+          description: Score distribution data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DistributionData"
+
+  /analytics/factors:
+    get:
+      operationId: getFactorAnalysis
+      tags: [analytics]
+      summary: Get factor vs score comparison data
+      parameters:
+        - name: factor
+          in: query
+          schema:
+            type: string
+          description: Factor column name to analyse
+      responses:
+        "200":
+          description: Factor analysis data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FactorAnalysis"
+
+  /analytics/at-risk:
+    get:
+      operationId: getAtRiskStudents
+      tags: [analytics]
+      summary: Get students below score threshold
+      parameters:
+        - name: threshold
+          in: query
+          schema:
+            type: integer
+          description: Score threshold (default 60)
+      responses:
+        "200":
+          description: At-risk student records
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentRecordList"
+
+  /analytics/raw:
+    get:
+      operationId: getRawData
+      tags: [analytics]
+      summary: Get paginated raw dataset records
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Raw student records with pagination
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedStudents"
+
+  /analytics/integrity:
+    get:
+      operationId: getDataIntegrity
+      tags: [analytics]
+      summary: Get data integrity report and system logs
+      responses:
+        "200":
+          description: Data integrity report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IntegrityReport"
+
+  /predict/score:
+    post:
+      operationId: predictScore
+      tags: [predict]
+      summary: Predict exam score using ML model
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PredictionInput"
+      responses:
+        "200":
+          description: Predicted score and contributing factors
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PredictionResult"
+
+  /predict/recommendations:
+    get:
+      operationId: getRecommendations
+      tags: [predict]
+      summary: Get personalised study recommendations
+      parameters:
+        - name: score
+          in: query
+          schema:
+            type: integer
+        - name: hours_studied
+          in: query
+          schema:
+            type: integer
+        - name: attendance
+          in: query
+          schema:
+            type: integer
+        - name: motivation
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Personalised study recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecommendationList"
+
+  /chat/message:
+    post:
+      operationId: sendChatMessage
+      tags: [chat]
+      summary: Send a message to the AI student mentor chatbot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatInput"
+      responses:
+        "200":
+          description: AI mentor response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +235,384 @@ components:
       required:
         - status
 
+    LoginInput:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    AuthResult:
+      type: object
+      required:
+        - success
+        - role
+        - token
+      properties:
+        success:
+          type: boolean
+        role:
+          type: string
+          enum: [student, teacher, admin]
+        token:
+          type: string
+        message:
+          type: string
+
+    DatasetSummary:
+      type: object
+      required:
+        - totalRecords
+        - meanScore
+        - highAchieversCount
+        - atRiskCount
+        - featureColumns
+        - nullCounts
+      properties:
+        totalRecords:
+          type: integer
+        meanScore:
+          type: number
+        medianScore:
+          type: number
+        stdScore:
+          type: number
+        highAchieversCount:
+          type: integer
+        atRiskCount:
+          type: integer
+        featureColumns:
+          type: array
+          items:
+            type: string
+        nullCounts:
+          type: object
+          additionalProperties:
+            type: integer
+
+    DistributionData:
+      type: object
+      required:
+        - bins
+      properties:
+        bins:
+          type: array
+          items:
+            $ref: "#/components/schemas/HistogramBin"
+
+    HistogramBin:
+      type: object
+      required:
+        - rangeStart
+        - rangeEnd
+        - count
+        - label
+      properties:
+        rangeStart:
+          type: integer
+        rangeEnd:
+          type: integer
+        count:
+          type: integer
+        label:
+          type: string
+
+    FactorAnalysis:
+      type: object
+      required:
+        - factor
+        - groups
+      properties:
+        factor:
+          type: string
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/FactorGroup"
+
+    FactorGroup:
+      type: object
+      required:
+        - label
+        - meanScore
+        - count
+      properties:
+        label:
+          type: string
+        meanScore:
+          type: number
+        count:
+          type: integer
+
+    StudentRecord:
+      type: object
+      required:
+        - id
+        - examScore
+      properties:
+        id:
+          type: integer
+        hoursStudied:
+          type: integer
+        attendance:
+          type: integer
+        parentalInvolvement:
+          type: string
+        accessToResources:
+          type: string
+        extracurricularActivities:
+          type: string
+        sleepHours:
+          type: integer
+        previousScores:
+          type: integer
+        motivationLevel:
+          type: string
+        internetAccess:
+          type: string
+        tutoringSessions:
+          type: integer
+        familyIncome:
+          type: string
+        teacherQuality:
+          type: string
+        schoolType:
+          type: string
+        peerInfluence:
+          type: string
+        physicalActivity:
+          type: integer
+        learningDisabilities:
+          type: string
+        parentalEducationLevel:
+          type: string
+        distanceFromHome:
+          type: string
+        gender:
+          type: string
+        examScore:
+          type: integer
+
+    StudentRecordList:
+      type: object
+      required:
+        - students
+        - total
+      properties:
+        students:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudentRecord"
+        total:
+          type: integer
+
+    PaginatedStudents:
+      type: object
+      required:
+        - students
+        - total
+        - page
+        - pageSize
+        - totalPages
+      properties:
+        students:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudentRecord"
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        totalPages:
+          type: integer
+
+    IntegrityReport:
+      type: object
+      required:
+        - rowCount
+        - columnCount
+        - nullMatrix
+        - systemLogs
+        - schemaChecks
+      properties:
+        rowCount:
+          type: integer
+        columnCount:
+          type: integer
+        nullMatrix:
+          type: object
+          additionalProperties:
+            type: integer
+        systemLogs:
+          type: array
+          items:
+            type: string
+        schemaChecks:
+          type: array
+          items:
+            $ref: "#/components/schemas/SchemaCheck"
+
+    SchemaCheck:
+      type: object
+      required:
+        - module
+        - status
+        - code
+      properties:
+        module:
+          type: string
+        status:
+          type: string
+        code:
+          type: string
+
+    PredictionInput:
+      type: object
+      required:
+        - hoursStudied
+        - attendance
+        - sleepHours
+        - previousScores
+        - tutoringSessions
+        - physicalActivity
+        - parentalInvolvement
+        - accessToResources
+        - motivationLevel
+        - internetAccess
+        - familyIncome
+        - teacherQuality
+        - peerInfluence
+        - extracurricularActivities
+      properties:
+        hoursStudied:
+          type: integer
+        attendance:
+          type: integer
+        sleepHours:
+          type: integer
+        previousScores:
+          type: integer
+        tutoringSessions:
+          type: integer
+        physicalActivity:
+          type: integer
+        parentalInvolvement:
+          type: string
+        accessToResources:
+          type: string
+        motivationLevel:
+          type: string
+        internetAccess:
+          type: string
+        familyIncome:
+          type: string
+        teacherQuality:
+          type: string
+        peerInfluence:
+          type: string
+        extracurricularActivities:
+          type: string
+
+    PredictionResult:
+      type: object
+      required:
+        - predictedScore
+        - confidence
+        - featureImportance
+        - grade
+      properties:
+        predictedScore:
+          type: number
+        confidence:
+          type: number
+        grade:
+          type: string
+        featureImportance:
+          type: array
+          items:
+            $ref: "#/components/schemas/FeatureImportance"
+
+    FeatureImportance:
+      type: object
+      required:
+        - feature
+        - importance
+      properties:
+        feature:
+          type: string
+        importance:
+          type: number
+
+    RecommendationList:
+      type: object
+      required:
+        - recommendations
+      properties:
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recommendation"
+
+    Recommendation:
+      type: object
+      required:
+        - category
+        - title
+        - description
+        - priority
+        - color
+      properties:
+        category:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [high, medium, low]
+        color:
+          type: string
+
+    ChatInput:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+        history:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChatMessage"
+
+    ChatMessage:
+      type: object
+      required:
+        - role
+        - content
+      properties:
+        role:
+          type: string
+          enum: [user, assistant]
+        content:
+          type: string
+
+    ChatResponse:
+      type: object
+      required:
+        - message
+        - suggestions
+      properties:
+        message:
+          type: string
+        suggestions:
+          type: array
+          items:
+            type: string
