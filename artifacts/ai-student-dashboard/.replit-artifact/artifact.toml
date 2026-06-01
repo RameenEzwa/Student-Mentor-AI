@@ -1,0 +1,21 @@
+kind = "web"
+previewPath = "/ai-student-dashboard/"
+title = "AI Student Performance Assistant"
+version = "1.0.0"
+id = "artifacts/ai-student-dashboard"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/ai-student-dashboard/" ]
+localPort = 22086
+
+[services.development]
+run = "streamlit run /home/runner/workspace/artifacts/ai-student-dashboard/app.py"
+
+[services.env]
+PORT = "22086"
+BASE_PATH = "/ai-student-dashboard/"

@@ -1,0 +1,17 @@
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = false
+port = 22086
+baseUrlPath = "/ai-student-dashboard"
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+base = "light"
+primaryColor = "#3730a3"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f8f7ff"
+textColor = "#1e1b4b"
+font = "sans serif"
